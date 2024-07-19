@@ -1,0 +1,12 @@
+[package]
+name = "mishmash"
+version = "1.0.0"
+edition = "2021"
+
+[dependencies]
+lsm303agr = "0.3.0"
+microbit-v2 = "0.13.0"
+cortex-m = "0.7.3"
+cortex-m-rt = "0.7.0"
+panic-halt = "0.2.0"
+rtt-target = { version = "0.3.1", features = ["cortex-m"] }
