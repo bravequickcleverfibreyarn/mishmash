@@ -80,7 +80,7 @@ fn entry() -> ! {
         CHBLUE,
         pins.p0_04.into_push_pull_output(Level::High).degrade(),
     );
-    
+
     let mut prime_ix = 0;
     loop {
         set_duty(&pwm0, CHRED, MAX_AMOUNT);
@@ -108,25 +108,25 @@ fn entry() -> ! {
         let mag_fie = mag_fie.unwrap();
 
         let uns = mag_fie.xyz_unscaled();
-        
+
         fn sq(num: i16) -> i32 {
             (num as i32).pow(2)
         }
-        
+
         let x_sq = sq(uns.0);
         let y_sq = sq(uns.1);
         let z_sq = sq(uns.2);
-        
+
         let vec_mag = herons_sqrt((x_sq + y_sq + z_sq) as u16);
         rprintln!("vec_mag {}", vec_mag);
 
         let sgp = SAF_PRIMES[prime_ix];
         prime_ix = ((prime_ix as i32 + 1) % SAF_PRI_COU as i32) as usize;
 
-        rprintln!("sgp {}\n", sgp);        
+        rprintln!("sgp {}\n", sgp);
 
         let vec_mag = vec_mag as u16;
-        
+
         let ck = cond_ck(vec_mag, sgp);
         let (d_amount, r_amount, g_amount, b_amount) = if ck == CheckCondition::Ok {
             let sgp = to_decimals(sgp);
@@ -155,7 +155,7 @@ fn entry() -> ! {
             rprintln!("\nkey= {}", akey);
 
             let flags = key_typ(akey);
-            
+
             rprint!("KeyType");
             for t in [Odd, Even, Prime, SafePrime] {
                 let tu8 = t.clone() as u8;
@@ -177,15 +177,14 @@ fn entry() -> ! {
                 13 => (2500, 0, HALF_AMOUNT, HALF_AMOUNT), // safe prime, always odd, cyan
                 _ => panic!(),
             }
-        }
-         else {
+        } else {
             (150u32, MAX_AMOUNT, 0, 0)
         };
 
         set_duty(&pwm0, CHRED, r_amount);
         set_duty(&pwm0, CHBLUE, b_amount);
         set_duty(&pwm0, CHGREEN, g_amount);
-        del.delay_ms(d_amount);        
+        del.delay_ms(d_amount);
     }
 }
 
@@ -197,7 +196,6 @@ enum CheckCondition {
 }
 
 fn cond_ck(gen: u16, sgp: u16) -> CheckCondition {
-    
     return if gen < 2 {
         GeneratorLessThenTwo
     } else if gen < sgp {
@@ -285,7 +283,7 @@ fn key_typ(num: u16) -> u8 {
         PrimeCk::Even => Even as u8,
         PrimeCk::Prime => {
             let ck = prime_ck((num - 1) / 2);
-            if  ck as isize & 4 == 4 {
+            if ck as isize & 4 == 4 {
                 SafePrime as u8
             } else {
                 Prime | Odd
@@ -305,9 +303,8 @@ type maxPlaces = [u8; MAX_PLACES];
 
 // xₙ₊₁ = ½(xₙ+S÷xₙ)
 fn herons_sqrt(num: u16) -> i32 {
-    
     let num = num as i32;
-    
+
     if num == 1 || num == 0 {
         return num;
     }
@@ -331,7 +328,7 @@ fn herons_sqrt(num: u16) -> i32 {
 enum PrimeCk {
     Zero = 0,
     Odd = 1,
-    Even = 2,    
+    Even = 2,
     Prime = 4,
     Two = 12,
 }
@@ -340,13 +337,13 @@ enum PrimeCk {
 //  ⇒ a=b=√num ∨ a < b ⇒ a < √num ∧ b > √num
 fn prime_ck(num: u16) -> PrimeCk {
     if num == 0 {
-        return PrimeCk::Zero
+        return PrimeCk::Zero;
     } else if num == 2 {
-        return PrimeCk::Two
+        return PrimeCk::Two;
     } else if num & 1 != 1 {
-        return PrimeCk::Even
+        return PrimeCk::Even;
     } else if num == 1 {
-        return PrimeCk::Odd        
+        return PrimeCk::Odd;
     }
 
     let sqrt = herons_sqrt(num);
@@ -385,9 +382,9 @@ impl AsSliceMut for decimalsMax {
 fn to_decimals(num: u16) -> decimalsU16 {
     let mut decimals = [0; MAX_U16_PLACES];
     let mut ix = 0;
-    
+
     let mut num = num as i32;
-    
+
     loop {
         let d = num % 10;
         decimals[ix] = d as u8;
@@ -403,7 +400,6 @@ fn to_decimals(num: u16) -> decimalsU16 {
 }
 
 fn from_decimals(decimals: &[u8]) -> u16 {
-
     let mut num = 0;
     let len = decimals.len();
 
