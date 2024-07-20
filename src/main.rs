@@ -36,8 +36,6 @@ use microbit::hal::pwm::{
     CounterMode, Prescaler, Pwm,
 };
 
-use core::clone::Clone;
-
 #[entry]
 fn entry() -> ! {
     rtt_init_print!();
