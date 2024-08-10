@@ -76,7 +76,7 @@ fn entry() -> ! {
     )
     .set_output_pin(
         CHBLUE,
-        pins.p0_04.into_push_pull_output(Level::High).degrade(),
+        pins.p0_04.into_push_pull_output(Level::Low).degrade(),
     );
 
     let mut prime_ix = 0;
