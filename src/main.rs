@@ -106,10 +106,28 @@ fn entry() -> ! {
         let mag_fie = mag_fie.unwrap();
 
         let uns = mag_fie.xyz_unscaled();
+        
+        rprintln!("uns.0 {}", uns.0);
+        rprintln!("uns.1 {}", uns.1);
+        rprintln!("uns.2 {}", uns.2);
 
         fn sq(num: i16) -> i32 {
             (num as i32).pow(2)
         }
+        
+        
+        let nt = mag_fie.xyz_nt();
+        
+        rprintln!("\nnt.0 {}", nt.0);
+        rprintln!("nt.1 {}", nt.1);
+        rprintln!("nt.2 {}", nt.2);
+        
+        let raw = mag_fie.xyz_raw();
+        
+        rprintln!("\nraw.0 {}", raw.0);
+        rprintln!("raw.1 {}", raw.1);
+        rprintln!("raw.2 {}\n", raw.2);
+        
 
         let x_sq = sq(uns.0);
         let y_sq = sq(uns.1);
