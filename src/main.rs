@@ -136,35 +136,35 @@ fn entry() -> ! {
         let vec_mag = herons_sqrt((x_sq + y_sq + z_sq) as u16);
         rprintln!("vec_mag {}", vec_mag);
 
-        let sgp = SAF_PRIMES[prime_ix];
+        let sp = SAF_PRIMES[prime_ix];
         prime_ix = ((prime_ix as i32 + 1) % SAF_PRI_COU as i32) as usize;
 
-        rprintln!("sgp {}\n", sgp);
+        rprintln!("sp {}\n", sp);
 
         let vec_mag = vec_mag as u16;
 
-        let ck = cond_ck(vec_mag, sgp);
+        let ck = cond_ck(vec_mag, sp);
         let (d_amount, r_amount, g_amount, b_amount) = if ck == CheckCondition::Ok {
-            let sgp = to_decimals(sgp);
-            let sgp = sgp.as_slice();
+            let sp = to_decimals(sp);
+            let sp = sp.as_slice();
 
             let gen = to_decimals(vec_mag);
             let gen = gen.as_slice();
 
             rprint!("ali private generation| ");
-            let (alice_sec, alice_rem) = private_generation(&mut rng, &gen, &sgp);
+            let (alice_sec, alice_rem) = private_generation(&mut rng, &gen, &sp);
             rprintln!("sec {}, rem {}.", alice_sec, alice_rem);
 
             rprint!("bob private generation| ");
-            let (bob_sec, bob_rem) = private_generation(&mut rng, &gen, &sgp);
+            let (bob_sec, bob_rem) = private_generation(&mut rng, &gen, &sp);
             rprintln!("sec {}, rem {}.", bob_sec, bob_rem);
 
             rprint!("ali shared generation| ");
-            let akey = shared_generation(bob_rem, alice_sec, &sgp);
+            let akey = shared_generation(bob_rem, alice_sec, &sp);
             rprintln!("key {}.", akey);
 
             rprint!("bob shared generation| ");
-            let bkey = shared_generation(alice_rem, bob_sec, &sgp);
+            let bkey = shared_generation(alice_rem, bob_sec, &sp);
             rprintln!("key {}.", bkey);
 
             assert_eq!(akey, bkey);
@@ -211,32 +211,32 @@ enum CheckCondition {
     Ok,
 }
 
-fn cond_ck(gen: u16, sgp: u16) -> CheckCondition {
+fn cond_ck(gen: u16, sp: u16) -> CheckCondition {
     return if gen < 2 {
         GeneratorLessThenTwo
-    } else if gen < sgp {
+    } else if gen < sp {
         Ok
     } else {
         GeneratorGreaterOrEqualToPrime
     };
 }
 
-fn private_generation(rng: &mut Rng, gen: &[u8], sgp: &[u8]) -> (u8, u16) {
+fn private_generation(rng: &mut Rng, gen: &[u8], sp: &[u8]) -> (u8, u16) {
     let secret = rng.random_u8();
 
     let mut pow = pow(gen, secret);
-    let rem = rem(pow.as_slice_mut(), sgp);
+    let rem = rem(pow.as_slice_mut(), sp);
 
     (secret, rem)
 }
 
 /// `rrem` — remote remainder, that side remainder
 /// `losec` — local secret, this side secret
-fn shared_generation(rrem: u16, losec: u8, sgp: &[u8]) -> u16 {
+fn shared_generation(rrem: u16, losec: u8, sp: &[u8]) -> u16 {
     let rrem = to_decimals(rrem);
     let mut pow = pow(rrem.as_slice(), losec);
 
-    rem(pow.as_slice_mut(), &sgp)
+    rem(pow.as_slice_mut(), &sp)
 }
 
 fn set_duty(pwm: &Pwm<PWM0>, ch: Channel, amount: u16) {
@@ -262,7 +262,7 @@ enum KeyType {
     #[allow(dead_code)]
     SgPrime = 20, // 10100, can be even
     #[allow(dead_code)]
-    SgAndSafe = 29, // 11101, always odd
+    SgAndSafePrime = 29, // 11101, always odd
 }
 
 impl BitOr for KeyType {
@@ -283,7 +283,7 @@ impl Display for KeyType {
             Prime => "Prime",
             SafePrime => "SafePrime",
             Self::SgPrime => "SgPrime",
-            Self::SgAndSafe => "SgAndSafe",
+            Self::SgAndSafePrime => "SgAndSafePrime",
         };
 
         f.write_str(text)
