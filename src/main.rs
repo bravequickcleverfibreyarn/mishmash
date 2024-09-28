@@ -266,10 +266,11 @@ enum KeyType {
 }
 
 impl BitOr for KeyType {
-    type Output = u8;
-
-    fn bitor(self, rhs: Self) -> u8 {
-        self as u8 | rhs as u8
+    type Output = KeyType;
+    
+    fn bitor(self, rhs: Self) -> KeyType {
+        let add = self as u8 | rhs as u8;
+        unsafe { core::mem::transmute::<u8, KeyType>(add) }
     }
 }
 
@@ -292,20 +293,20 @@ impl Display for KeyType {
 
 use crate::KeyType::{Even, Odd, Prime, SafePrime, Zero};
 fn key_typ(num: u16) -> u8 {
-    match prime_ck(num) {
-        PrimeCk::Zero => Zero as u8,
+    let typ = match prime_ck(num) {
+        PrimeCk::Zero => Zero,
         PrimeCk::Two => Prime | Even,
-        PrimeCk::Odd => Odd as u8,
-        PrimeCk::Even => Even as u8,
+        PrimeCk::Odd => Odd,
+        PrimeCk::Even => Even,
         PrimeCk::Prime => {
-            let ck = prime_ck((num - 1) / 2);
-            if ck as isize & 4 == 4 {
-                SafePrime as u8
-            } else {
-                Prime | Odd
+            match prime_ck((num - 1) / 2) {
+                PrimeCk::Prime => SafePrime,
+                _ => Prime | Odd
             }
         }
-    }
+    };
+    
+    typ as u8
 }
 
 #[allow(non_camel_case_types)]
