@@ -347,7 +347,7 @@ enum PrimeCk {
     Odd = 1,
     Even = 2,
     Prime = 4,
-    Two = 12,
+    Two = 14,
 }
 
 // 1 < a ≤ b < num, num = a×b = √num×√num
