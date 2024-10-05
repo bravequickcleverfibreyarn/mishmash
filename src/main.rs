@@ -106,7 +106,7 @@ fn entry() -> ! {
         let mag_fie = mag_fie.unwrap();
 
         let uns = mag_fie.xyz_unscaled();
-        
+
         rprintln!("uns.0 {}", uns.0);
         rprintln!("uns.1 {}", uns.1);
         rprintln!("uns.2 {}", uns.2);
@@ -114,20 +114,18 @@ fn entry() -> ! {
         fn sq(num: i16) -> i32 {
             (num as i32).pow(2)
         }
-        
-        
+
         let nt = mag_fie.xyz_nt();
-        
+
         rprintln!("\nnt.0 {}", nt.0);
         rprintln!("nt.1 {}", nt.1);
         rprintln!("nt.2 {}", nt.2);
-        
+
         let raw = mag_fie.xyz_raw();
-        
+
         rprintln!("\nraw.0 {}", raw.0);
         rprintln!("raw.1 {}", raw.1);
         rprintln!("raw.2 {}\n", raw.2);
-        
 
         let x_sq = sq(uns.0);
         let y_sq = sq(uns.1);
@@ -267,7 +265,7 @@ enum KeyType {
 
 impl BitOr for KeyType {
     type Output = KeyType;
-    
+
     fn bitor(self, rhs: Self) -> KeyType {
         let add = self as u8 | rhs as u8;
         unsafe { core::mem::transmute::<u8, KeyType>(add) }
@@ -298,14 +296,12 @@ fn key_typ(num: u16) -> u8 {
         PrimeCk::Two => Prime | Even,
         PrimeCk::Odd => Odd,
         PrimeCk::Even => Even,
-        PrimeCk::Prime => {
-            match prime_ck((num - 1) / 2) {
-                PrimeCk::Prime => SafePrime,
-                _ => Prime | Odd
-            }
-        }
+        PrimeCk::Prime => match prime_ck((num - 1) / 2) {
+            PrimeCk::Prime => SafePrime,
+            _ => Prime | Odd,
+        },
     };
-    
+
     typ as u8
 }
 
@@ -353,14 +349,12 @@ enum PrimeCk {
 // 1 < a ≤ b < num, num = a×b = √num×√num
 //  ⇒ a=b=√num ∨ a < b ⇒ a < √num ∧ b > √num
 fn prime_ck(num: u16) -> PrimeCk {
-    if num == 0 {
-        return PrimeCk::Zero;
-    } else if num == 2 {
-        return PrimeCk::Two;
-    } else if num & 1 != 1 {
-        return PrimeCk::Even;
-    } else if num == 1 {
-        return PrimeCk::Odd;
+    match num {
+        0 => return PrimeCk::Zero,
+        1 => return PrimeCk::Odd,
+        2 => return PrimeCk::Two,
+        x if x & 1 != 1 => return PrimeCk::Even,
+        _ => {}
     }
 
     let sqrt = herons_sqrt(num);
