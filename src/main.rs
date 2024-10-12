@@ -296,7 +296,7 @@ fn key_typ(num: u16) -> u8 {
         PrimeCk::Two => Prime | Even,
         PrimeCk::Odd => Odd,
         PrimeCk::Even => Even,
-        PrimeCk::Prime => match prime_ck((num - 1) / 2) {
+        PrimeCk::Prime => match prime_ck((num - 1) >> 1) {
             PrimeCk::Prime => SafePrime,
             _ => Prime | Odd,
         },
@@ -322,10 +322,10 @@ fn herons_sqrt(num: u16) -> i32 {
         return num;
     }
 
-    let mut cur = num / 2;
+    let mut cur = num >> 1;
 
     loop {
-        let nex = (cur + num / cur) / 2;
+        let nex = (cur + num / cur) >> 1;
 
         if nex >= cur {
             break;
@@ -565,9 +565,10 @@ fn pow(base: &[u8], pow: u8) -> decimalsMax {
 
     loop {
         steps[wr_ix] = step;
-        step /= 2;
-
-        if step < 2 {
+        step >>= 1;
+        
+        // `pow = 1` and `pow = 0` solved above
+        if step == 1 {
             break;
         }
 
