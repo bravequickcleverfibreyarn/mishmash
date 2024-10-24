@@ -92,7 +92,7 @@ fn entry() -> ! {
             continue;
         }
 
-        let mag_sta = mag_sta.unwrap();
+        let mag_sta = unsafe { mag_sta.unwrap_unchecked() };
 
         if !mag_sta.xyz_new_data() {
             continue;
@@ -103,7 +103,7 @@ fn entry() -> ! {
             continue;
         }
 
-        let mag_fie = mag_fie.unwrap();
+        let mag_fie = unsafe { mag_fie.unwrap_unchecked() };
 
         let uns = mag_fie.xyz_unscaled();
 
@@ -473,17 +473,17 @@ fn rem(dividend: &mut [u8], divisor: &[u8]) -> u16 {
             wr_ix -= 1;
         }
 
-        end_len = rem_crux(dividend, &wdsor, end_len, wdsor_len);
+        end_len = rem_cross(dividend, &wdsor, end_len, wdsor_len);
     }
 
     if end_len == sor_len {
-        end_len = rem_crux(dividend, divisor, end_len, sor_len);
+        end_len = rem_cross(dividend, divisor, end_len, sor_len);
     }
 
     from_decimals(&dividend[..end_len])
 }
 
-fn rem_crux(end: &mut [u8], sor: &[u8], end_len: usize, sor_len: usize) -> usize {
+fn rem_cross(end: &mut [u8], sor: &[u8], end_len: usize, sor_len: usize) -> usize {
     let mut takeover;
     let mut ix;
 
@@ -566,7 +566,7 @@ fn pow(base: &[u8], pow: u8) -> decimalsMax {
     loop {
         steps[wr_ix] = step;
         step >>= 1;
-        
+
         // `pow = 1` and `pow = 0` solved above
         if step == 1 {
             break;
@@ -584,7 +584,7 @@ fn pow(base: &[u8], pow: u8) -> decimalsMax {
     let mut ixes = (0..=wr_ix).rev();
 
     loop {
-        let re_ix = ixes.next().unwrap();
+        let re_ix = unsafe { ixes.next().unwrap_unchecked() };
 
         for off in 0..mcand_len {
             sum_len = muladd(&mcand[0..mcand_len], mcand[off], sum, off);
