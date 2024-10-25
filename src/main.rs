@@ -181,8 +181,8 @@ fn entry() -> ! {
             rprintln!("\n");
 
             match flags {
-                // as long as gen < prime, rem cannot be zero
-                // otherwise check for instance 15^17 % 5
+                // 0 < gen < prime ⇒ rem > 0
+                // gen ÷ prime = a ∧ ⌊a⌋ ⋅ prime = gen ⇒ rem = 0
                 0 => panic!(),
                 1 => (1000, 0, 0, MAX_AMOUNT),             // odd, blue
                 2 => (1000, 0, MAX_AMOUNT, 0),             // even, green
@@ -314,7 +314,7 @@ type decimalsMax = (maxPlaces, usize);
 #[allow(non_camel_case_types)]
 type maxPlaces = [u8; MAX_PLACES];
 
-// xₙ₊₁ = ½(xₙ+S÷xₙ)
+// xₙ₊₁ = ½(xₙ +S ÷xₙ)
 fn herons_sqrt(num: u16) -> i32 {
     let num = num as i32;
 
@@ -346,7 +346,7 @@ enum PrimeCk {
     Two = 14,
 }
 
-// 1 < a ≤ b < num, num = a×b = √num×√num
+// 1 < a ≤ b < num, num = a ⋅b = √num ⋅√num
 //  ⇒ a=b=√num ∨ a < b ⇒ a < √num ∧ b > √num
 fn prime_ck(num: u16) -> PrimeCk {
     match num {
