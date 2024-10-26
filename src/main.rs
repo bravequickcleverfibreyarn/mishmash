@@ -182,7 +182,7 @@ fn entry() -> ! {
 
             match flags {
                 // 0 < gen < prime ⇒ rem > 0
-                // gen ÷ prime = a ∧ ⌊a⌋ ⋅ prime = gen ⇒ rem = 0
+                // gen ÷ prime = a ∧ ⌊a⌋ = a ⇒ rem = 0
                 0 => panic!(),
                 1 => (1000, 0, 0, MAX_AMOUNT),             // odd, blue
                 2 => (1000, 0, MAX_AMOUNT, 0),             // even, green
