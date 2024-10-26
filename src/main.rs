@@ -561,7 +561,7 @@ fn pow(base: &[u8], pow: u8) -> decimalsMax {
 
     let mut steps = [0; 7];
     let mut wr_ix = 0;
-    let mut step = pow;
+    let mut step = pow as u8;
 
     loop {
         steps[wr_ix] = step;
