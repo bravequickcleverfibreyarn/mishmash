@@ -2,6 +2,8 @@
 name = "mishmash"
 version = "1.0.0"
 edition = "2021"
+authors = [ "software9119.technology" ]
+license = "MIT"
 
 [dependencies]
 lsm303agr = "0.3.0"
@@ -10,3 +12,10 @@ cortex-m = "0.7.3"
 cortex-m-rt = "0.7.0"
 panic-halt = "0.2.0"
 rtt-target = { version = "0.3.1", features = ["cortex-m"] }
+
+[profile.release]
+opt-level=0
+lto="off"
+panic="abort"
+codegen-units=1
+strip="symbols"

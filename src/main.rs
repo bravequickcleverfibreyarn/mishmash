@@ -183,13 +183,13 @@ fn entry() -> ! {
             match flags {
                 // 0 < gen < prime ⇒ rem > 0
                 // gen ÷ prime = a ∧ ⌊a⌋ = a ⇒ rem = 0
-                0 => panic!(),
+                0 => panic!("0 key"),
                 1 => (1000, 0, 0, MAX_AMOUNT),             // odd, blue
                 2 => (1000, 0, MAX_AMOUNT, 0),             // even, green
                 5 => (1200, HALF_AMOUNT, HALF_AMOUNT, 0),  // odd prime, yellow
                 6 => (1500, HALF_AMOUNT, 0, HALF_AMOUNT),  // even prime, purple
                 13 => (2500, 0, HALF_AMOUNT, HALF_AMOUNT), // safe prime, always odd, cyan
-                _ => panic!(),
+                _ => panic!("unsupported flag"),
             }
         } else {
             (150u32, MAX_AMOUNT, 0, 0)
